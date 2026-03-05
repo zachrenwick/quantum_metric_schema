@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--
+  Quantum Metric Session Archive Schema Tree — Interactive Collapsible Visualization
+  Source: Quantum Metric
+
+  HOW TO REFRESH SCHEMA DATA:
+  1. Query BigQuery table metadata for `atz-data-ingest-prd.quantummetrics_prd.sessions_archive`
+     using the MCP BigQuery tool (get_table_info) or bq CLI:
+       sessions_archive
+  2. Transform each Schema field into { name: "field_name (TYPE)", children: [...] } format.
+     - For REPEATED fields, prefix type: "REPEATED RECORD", "REPEATED STRING", etc.
+     - Omit children key for leaf (non-RECORD) fields.
+     - Root node name: "sessions_archive"
+  3. Replace the SCHEMA_DATA constant below with the new JSON object.
+  4. Open this file directly in a browser (file:// or http://).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Metric — sessions_archive Schema</title>
+<style>
+  /* Edward Tufte–inspired theme: high data-ink ratio, restrained palette */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'ET Book', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    background: #fffff8;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  header {
+    padding: 18px 28px 10px;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: #333;
+  }
+  header p {
+    font-size: 0.82rem;
+    color: #777;
+    margin-top: 2px;
+  }
+  .help {
+    font-size: 0.75rem;
+    color: #999;
+    padding: 6px 28px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+  .help kbd {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 1px 4px;
+    font-size: 0.72rem;
+    font-family: monospace;
+  }
+  #chart {
+    flex: 1;
+    min-height: 0;
+  }
+  #fallback {
+    display: none;
+    padding: 40px;
+    text-align: center;
+    color: #b00;
+    font-size: 1rem;
+  }
+  .stats {
+    font-size: 0.72rem;
+    color: #aaa;
+    padding: 4px 28px;
+    border-top: 1px solid #eee;
+    text-align: right;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Quantum Metric sessions_archive Schema</h1>
+  <p>Quantum Metric — BigQuery Schema Tree</p>
+</header>
+<div class="help">
+  <kbd>Click</kbd> node to expand / collapse &nbsp;·&nbsp;
+  <kbd>Scroll</kbd> to zoom &nbsp;·&nbsp;
+  <kbd>Drag</kbd> to pan &nbsp;·&nbsp;
+  <kbd>Right-click</kbd> to reset view
+</div>
+<div id="chart"></div>
+<div id="fallback">Schema data is missing or invalid. See source comments for regeneration steps.</div>
+<div class="stats" id="stats"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── Embedded schema payload (see header comment for refresh instructions) ──
+  var SCHEMA_DATA = {"name":"sessions_archive","children":[{"name":"id (INTEGER)"},{"name":"cookie (STRING)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"last_updated (INTEGER)"},{"name":"screen_width (INTEGER)"},{"name":"screen_height (INTEGER)"},{"name":"conversion_count (INTEGER)"},{"name":"conversion_value (INTEGER)"},{"name":"cart_value (INTEGER)"},{"name":"abn_segment (STRING)"},{"name":"engaged (BOOLEAN)"},{"name":"conn_rtt (STRING)"},{"name":"conn_eff_type (STRING)"},{"name":"conn_down (STRING)"},{"name":"exit_click_sel (STRING)"},{"name":"exit_click_text (STRING)"},{"name":"exit_url (STRING)"},{"name":"qm_version (STRING)"},{"name":"application_type (STRING)"},{"name":"replay_enabled (BOOLEAN)"},{"name":"user (RECORD)","children":[{"name":"id (INTEGER)"},{"name":"email (STRING)"},{"name":"login (STRING)"},{"name":"cookies (REPEATED STRING)"},{"name":"firstname (STRING)"},{"name":"lastname (STRING)"},{"name":"loyalty (INTEGER)"},{"name":"data (STRING)"},{"name":"created (INTEGER)"},{"name":"updated (INTEGER)"}]},{"name":"locale (RECORD)","children":[{"name":"ip (STRING)"},{"name":"country_iso_code (STRING)"},{"name":"region (STRING)"},{"name":"city (STRING)"},{"name":"lat (FLOAT)"},{"name":"lng (FLOAT)"},{"name":"encrypted_ip (STRING)"},{"name":"encrypt_key (STRING)"},{"name":"hashed_ip (STRING)"}]},{"name":"device (RECORD)","children":[{"name":"name (STRING)"},{"name":"type (STRING)"},{"name":"user_agent (STRING)"},{"name":"browser_name (STRING)"},{"name":"browser_major_ver (INTEGER)"}]},{"name":"os (RECORD)","children":[{"name":"id (INTEGER)"},{"name":"name (STRING)"},{"name":"type (STRING)"}]},{"name":"landing_url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"last_url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"referrer (RECORD)","children":[{"name":"category (STRING)"},{"name":"sub_category (STRING)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"first_referrer (RECORD)","children":[{"name":"category (STRING)"},{"name":"sub_category (STRING)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"replay_viewed (BOOLEAN)"},{"name":"partition_date (DATE)"},{"name":"hits (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"secure (BOOLEAN)"},{"name":"response_size (INTEGER)"},{"name":"dom_interactive (INTEGER)"},{"name":"dom_complete (INTEGER)"},{"name":"engaged_seconds (INTEGER)"},{"name":"fetch_start (INTEGER)"},{"name":"domain_lookup_start (INTEGER)"},{"name":"domain_lookup_end (INTEGER)"},{"name":"connect_start (INTEGER)"},{"name":"secure_connection_start (INTEGER)"},{"name":"connect_end (INTEGER)"},{"name":"redirect_start (INTEGER)"},{"name":"redirect_end (INTEGER)"},{"name":"request_start (INTEGER)"},{"name":"response_start (INTEGER)"},{"name":"response_end (INTEGER)"},{"name":"dom_content_loaded_event_start (INTEGER)"},{"name":"dom_content_loaded_event_end (INTEGER)"},{"name":"load_event_start (INTEGER)"},{"name":"load_event_end (INTEGER)"},{"name":"first_paint (INTEGER)"},{"name":"first_contentful_paint (INTEGER)"},{"name":"elements_count (INTEGER)"},{"name":"spa_transition_duration (INTEGER)"},{"name":"spa_transition_apis (INTEGER)"},{"name":"spa_transition_mutations (INTEGER)"},{"name":"largest_contentful_paint (FLOAT)"},{"name":"first_input_delay (FLOAT)"},{"name":"cumulative_layout_shift (FLOAT)"},{"name":"timing_origin (INTEGER)"},{"name":"encoded_body_size (INTEGER)"},{"name":"decoded_body_size (INTEGER)"},{"name":"transfer_size (INTEGER)"},{"name":"clicks (INTEGER)"},{"name":"mouse_hundredth_miles (INTEGER)"},{"name":"scroll_hundredth_miles (INTEGER)"},{"name":"chars_typed (INTEGER)"},{"name":"exit_click_sel (STRING)"},{"name":"exit_click_text (STRING)"},{"name":"exit_url (STRING)"},{"name":"application_version (STRING)"},{"name":"query_string (STRING)"},{"name":"fragment_identifier (STRING)"},{"name":"max_scroll (INTEGER)"},{"name":"attn_10 (INTEGER)"},{"name":"attn_20 (INTEGER)"},{"name":"attn_30 (INTEGER)"},{"name":"attn_40 (INTEGER)"},{"name":"attn_50 (INTEGER)"},{"name":"attn_60 (INTEGER)"},{"name":"attn_70 (INTEGER)"},{"name":"attn_80 (INTEGER)"},{"name":"attn_90 (INTEGER)"},{"name":"attn_100 (INTEGER)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"referrer (RECORD)","children":[{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"window_start_height (INTEGER)"},{"name":"window_start_width (INTEGER)"},{"name":"title (STRING)"},{"name":"parent_id (INTEGER)"},{"name":"scroll_depth (INTEGER)"},{"name":"is_server_side (BOOLEAN)"},{"name":"html_hash (STRING)"},{"name":"inp_value (INTEGER)"},{"name":"inp_selector (STRING)"}]},{"name":"hits_event (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_domain (STRING)"},{"name":"hit_path (STRING)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"event_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"event (STRING)"},{"name":"value (STRING)"},{"name":"display_in_ui (BOOLEAN)"},{"name":"is_conversion (BOOLEAN)"},{"name":"is_error (BOOLEAN)"},{"name":"data (JSON)"},{"name":"is_server_side (BOOLEAN)"}]},{"name":"hits_ajax (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"response_server_ms (INTEGER)"},{"name":"response_size (INTEGER)"},{"name":"response_code (INTEGER)"},{"name":"is_server_side (BOOLEAN)"},{"name":"query_string (STRING)"}]},{"name":"hits_forms (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_form_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"form_name_id (INTEGER)"},{"name":"form_name (STRING)"},{"name":"form_action_id (INTEGER)"},{"name":"form_action (STRING)"},{"name":"fill_time_s (INTEGER)"},{"name":"fields (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_form_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"field_name_id (INTEGER)"},{"name":"field_name (STRING)"},{"name":"fill_decaseconds (INTEGER)"},{"name":"filled_count (INTEGER)"},{"name":"is_filled (BOOLEAN)"},{"name":"is_drop_off (BOOLEAN)"},{"name":"value (STRING)"}]}]},{"name":"hits_click (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"selector (STRING)"},{"name":"parent_selector (STRING)"},{"name":"text (STRING)"},{"name":"time_to_click (INTEGER)"},{"name":"offsetx (INTEGER)"},{"name":"offsety (INTEGER)"}]},{"name":"hits_resources (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"url (STRING)"},{"name":"connect_start (INTEGER)"},{"name":"connect_end (INTEGER)"},{"name":"domain_lookup_start (INTEGER)"},{"name":"domain_lookup_end (INTEGER)"},{"name":"decoded_body_size (INTEGER)"},{"name":"encoded_body_size (INTEGER)"},{"name":"fetch_start (INTEGER)"},{"name":"initiator_type (STRING)"},{"name":"next_hop_protocol (STRING)"},{"name":"redirect_start (INTEGER)"},{"name":"redirect_end (INTEGER)"},{"name":"request_start (INTEGER)"},{"name":"response_start (INTEGER)"},{"name":"response_end (INTEGER)"},{"name":"secure_connection_start (INTEGER)"},{"name":"transfer_size (INTEGER)"},{"name":"worker_start (INTEGER)"},{"name":"is_cached (BOOLEAN)"},{"name":"is_critical (BOOLEAN)"},{"name":"is_cross_origin (BOOLEAN)"},{"name":"is_async (BOOLEAN)"},{"name":"is_compressed (BOOLEAN)"},{"name":"server_timings (STRING)"}]},{"name":"timestamp (TIMESTAMP)"},{"name":"etl_batch (TIMESTAMP)"},{"name":"session_events (REPEATED RECORD)","children":[{"name":"ts (INTEGER)"},{"name":"id (INTEGER)"},{"name":"name (STRING)"},{"name":"source (STRING)"},{"name":"data (JSON)"}]},{"name":"is_server_side (BOOLEAN)"},{"name":"event_ids (REPEATED INTEGER)"},{"name":"has_errors (BOOLEAN)"},{"name":"surveys (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"hit_ts (INTEGER)"},{"name":"hit_path (STRING)"},{"name":"hit_domain (STRING)"},{"name":"survey_id (STRING)"},{"name":"version (INTEGER)"},{"name":"response_id (STRING)"},{"name":"status (STRING)"},{"name":"answers (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"question_id (STRING)"},{"name":"response_text (STRING)"},{"name":"response_rating (INTEGER)"},{"name":"response_choices (REPEATED STRING)"},{"name":"sentiment (FLOAT)"},{"name":"categories (REPEATED STRING)"},{"name":"updated_ts (INTEGER)"},{"name":"labels (REPEATED STRING)"},{"name":"topics (REPEATED RECORD)","children":[{"name":"name (STRING)"},{"name":"subtopics (REPEATED STRING)"}]},{"name":"themes (REPEATED STRING)"},{"name":"question (STRING)"}]},{"name":"ts (INTEGER)"},{"name":"shown_ts (INTEGER)"},{"name":"started_ts (INTEGER)"},{"name":"last_updated (INTEGER)"},{"name":"survey (STRING)"}]}]};
+
+  // ── Validate payload ──
+  if (!SCHEMA_DATA || !SCHEMA_DATA.children) {
+    document.getElementById('chart').style.display = 'none';
+    document.getElementById('fallback').style.display = 'block';
+    return;
+  }
+
+  // ── Compute stats ──
+  function countNodes(node) {
+    var c = 1;
+    (node.children || []).forEach(function (ch) { c += countNodes(ch); });
+    return c;
+  }
+  function maxDepth(node, d) {
+    d = d || 0;
+    if (!node.children) return d;
+    return Math.max.apply(null, node.children.map(function (ch) { return maxDepth(ch, d + 1); }));
+  }
+  var totalNodes = countNodes(SCHEMA_DATA);
+  var depth = maxDepth(SCHEMA_DATA, 0);
+  document.getElementById('stats').textContent =
+    totalNodes + ' fields · max depth ' + depth + ' · source: quantummetrics_prd.sessions_archive';
+
+  // ── Collapse nodes beyond initial depth ──
+  var INITIAL_DEPTH = 1;
+  function setCollapsed(node, currentDepth) {
+    if (node.children && node.children.length) {
+      if (currentDepth >= INITIAL_DEPTH) {
+        node.collapsed = true;
+      }
+      node.children.forEach(function (ch) { setCollapsed(ch, currentDepth + 1); });
+    }
+  }
+  setCollapsed(SCHEMA_DATA, 0);
+
+  // ── Style helpers ──
+  // Color leaf vs record nodes differently for visual distinction
+  function styleTree(node) {
+    var isRecord = node.children && node.children.length > 0;
+    node.itemStyle = { color: isRecord ? '#4a4a4a' : '#999' };
+    node.label = {
+      fontSize: isRecord ? 12 : 11,
+      color: '#333',
+      fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace"
+    };
+    if (node.children) {
+      node.children.forEach(styleTree);
+    }
+  }
+  styleTree(SCHEMA_DATA);
+  // Root gets special treatment
+  SCHEMA_DATA.itemStyle = { color: '#111', borderWidth: 2 };
+  SCHEMA_DATA.label = {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#111',
+    fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace"
+  };
+
+  // ── Init ECharts ──
+  var chartDom = document.getElementById('chart');
+  var chart = echarts.init(chartDom);
+
+  var option = {
+    tooltip: {
+      trigger: 'item',
+      triggerOn: 'mousemove',
+      formatter: function (params) {
+        var d = params.data;
+        var parts = d.name.match(/^(.+?)\s*\((.+)\)$/);
+        if (parts) {
+          var childCount = d.children ? d.children.length : 0;
+          var tip = '<b>' + parts[1] + '</b><br/>Type: ' + parts[2];
+          if (childCount > 0) tip += '<br/>Children: ' + childCount;
+          return tip;
+        }
+        return '<b>' + d.name + '</b>';
+      },
+      backgroundColor: '#fffff8',
+      borderColor: '#ccc',
+      textStyle: { color: '#333', fontFamily: 'monospace', fontSize: 12 }
+    },
+    series: [{
+      type: 'tree',
+      data: [SCHEMA_DATA],
+      orient: 'LR',
+      top: 20,
+      bottom: 20,
+      left: 160,
+      right: 260,
+      symbolSize: 7,
+      edgeShape: 'polyline',
+      edgeForkPosition: '63%',
+      initialTreeDepth: -1,   // we control collapse state manually
+      lineStyle: {
+        color: '#ccc',
+        width: 1
+      },
+      label: {
+        position: 'left',
+        verticalAlign: 'middle',
+        align: 'right',
+        fontSize: 11,
+        fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace",
+        color: '#333'
+      },
+      leaves: {
+        label: {
+          position: 'right',
+          verticalAlign: 'middle',
+          align: 'left'
+        }
+      },
+      expandAndCollapse: true,
+      animationDuration: 400,
+      animationDurationUpdate: 400,
+      roam: true,
+      scaleLimit: { min: 0.3, max: 3 }
+    }]
+  };
+
+  chart.setOption(option);
+
+  // ── Right-click to reset view ──
+  chartDom.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    chart.dispatchAction({ type: 'restore' });
+  });
+
+  // ── Debounced resize ──
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { chart.resize(); }, 150);
+  });
+})();
+</script>
+</body>
+</html>
