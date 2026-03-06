@@ -22,13 +22,19 @@
 <style>
   /* Edward Tufte–inspired theme: high data-ink ratio, restrained palette */
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Use a JS-set custom property for the true viewport height on mobile,
+     falling back to 100dvh (dynamic viewport height) then 100vh. */
+  :root { --vh: 1vh; }
+
   body {
     font-family: 'ET Book', Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
     background: #fffff8;
     color: #111;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
     overflow: hidden;
   }
   header {
@@ -53,6 +59,7 @@
     padding: 6px 28px;
     border-bottom: 1px solid #eee;
     flex-shrink: 0;
+    line-height: 1.6;
   }
   .help kbd {
     background: #f0f0f0;
@@ -62,6 +69,9 @@
     font-size: 0.72rem;
     font-family: monospace;
   }
+  /* Show/hide desktop vs. touch hint rows */
+  .help-desktop { display: block; }
+  .help-touch   { display: none; }
   #chart {
     flex: 1;
     min-height: 0;
@@ -80,6 +90,43 @@
     border-top: 1px solid #eee;
     text-align: right;
     flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── Mobile styles ── */
+  @media (max-width: 600px) {
+    header {
+      padding: 10px 14px 7px;
+    }
+    header h1 {
+      font-size: 1rem;
+    }
+    header p {
+      font-size: 0.75rem;
+    }
+    .help {
+      padding: 5px 14px;
+      font-size: 0.7rem;
+    }
+    .help kbd {
+      font-size: 0.68rem;
+    }
+    .stats {
+      padding: 3px 14px;
+      font-size: 0.65rem;
+    }
+    #fallback {
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Show touch hints on true touch-primary devices */
+  @media (hover: none) and (pointer: coarse) {
+    .help-desktop { display: none; }
+    .help-touch   { display: block; }
   }
 </style>
 </head>
@@ -90,10 +137,18 @@
   <p>Quantum Metric — BigQuery Schema Tree</p>
 </header>
 <div class="help">
-  <kbd>Click</kbd> node to expand / collapse &nbsp;·&nbsp;
-  <kbd>Scroll</kbd> to zoom &nbsp;·&nbsp;
-  <kbd>Drag</kbd> to pan &nbsp;·&nbsp;
-  <kbd>Right-click</kbd> to reset view
+  <span class="help-desktop">
+    <kbd>Click</kbd> node to expand / collapse &nbsp;·&nbsp;
+    <kbd>Scroll</kbd> to zoom &nbsp;·&nbsp;
+    <kbd>Drag</kbd> to pan &nbsp;·&nbsp;
+    <kbd>Right-click</kbd> to reset view
+  </span>
+  <span class="help-touch">
+    <kbd>Tap</kbd> node to expand / collapse &nbsp;·&nbsp;
+    <kbd>Pinch</kbd> to zoom &nbsp;·&nbsp;
+    <kbd>Drag</kbd> to pan &nbsp;·&nbsp;
+    <kbd>Double-tap</kbd> to reset view
+  </span>
 </div>
 <div id="chart"></div>
 <div id="fallback">Schema data is missing or invalid. See source comments for regeneration steps.</div>
@@ -170,65 +225,70 @@
   var chartDom = document.getElementById('chart');
   var chart = echarts.init(chartDom);
 
-  var option = {
-    tooltip: {
-      trigger: 'item',
-      triggerOn: 'mousemove',
-      formatter: function (params) {
-        var d = params.data;
-        var parts = d.name.match(/^(.+?)\s*\((.+)\)$/);
-        if (parts) {
-          var childCount = d.children ? d.children.length : 0;
-          var tip = '<b>' + parts[1] + '</b><br/>Type: ' + parts[2];
-          if (childCount > 0) tip += '<br/>Children: ' + childCount;
-          return tip;
-        }
-        return '<b>' + d.name + '</b>';
-      },
-      backgroundColor: '#fffff8',
-      borderColor: '#ccc',
-      textStyle: { color: '#333', fontFamily: 'monospace', fontSize: 12 }
-    },
-    series: [{
-      type: 'tree',
-      data: [SCHEMA_DATA],
-      orient: 'LR',
-      top: 20,
-      bottom: 20,
-      left: 160,
-      right: 260,
-      symbolSize: 7,
-      edgeShape: 'polyline',
-      edgeForkPosition: '63%',
-      initialTreeDepth: -1,   // we control collapse state manually
-      lineStyle: {
-        color: '#ccc',
-        width: 1
-      },
-      label: {
-        position: 'left',
-        verticalAlign: 'middle',
-        align: 'right',
-        fontSize: 11,
-        fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace",
-        color: '#333'
-      },
-      leaves: {
-        label: {
-          position: 'right',
-          verticalAlign: 'middle',
-          align: 'left'
-        }
-      },
-      expandAndCollapse: true,
-      animationDuration: 400,
-      animationDurationUpdate: 400,
-      roam: true,
-      scaleLimit: { min: 0.3, max: 3 }
-    }]
-  };
+  function isMobile() { return window.innerWidth <= 600; }
 
-  chart.setOption(option);
+  function buildOption() {
+    var mobile = isMobile();
+    return {
+      tooltip: {
+        trigger: 'item',
+        triggerOn: 'mousemove',
+        formatter: function (params) {
+          var d = params.data;
+          var parts = d.name.match(/^(.+?)\s*\((.+)\)$/);
+          if (parts) {
+            var childCount = d.children ? d.children.length : 0;
+            var tip = '<b>' + parts[1] + '</b><br/>Type: ' + parts[2];
+            if (childCount > 0) tip += '<br/>Children: ' + childCount;
+            return tip;
+          }
+          return '<b>' + d.name + '</b>';
+        },
+        backgroundColor: '#fffff8',
+        borderColor: '#ccc',
+        textStyle: { color: '#333', fontFamily: 'monospace', fontSize: 12 }
+      },
+      series: [{
+        type: 'tree',
+        data: [SCHEMA_DATA],
+        orient: 'LR',
+        top: 20,
+        bottom: 20,
+        left: mobile ? 80 : 160,
+        right: mobile ? 120 : 260,
+        symbolSize: mobile ? 5 : 7,
+        edgeShape: 'polyline',
+        edgeForkPosition: '63%',
+        initialTreeDepth: -1,   // we control collapse state manually
+        lineStyle: {
+          color: '#ccc',
+          width: 1
+        },
+        label: {
+          position: 'left',
+          verticalAlign: 'middle',
+          align: 'right',
+          fontSize: mobile ? 9 : 11,
+          fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace",
+          color: '#333'
+        },
+        leaves: {
+          label: {
+            position: 'right',
+            verticalAlign: 'middle',
+            align: 'left'
+          }
+        },
+        expandAndCollapse: true,
+        animationDuration: 400,
+        animationDurationUpdate: 400,
+        roam: true,
+        scaleLimit: { min: mobile ? 0.2 : 0.3, max: 3 }
+      }]
+    };
+  }
+
+  chart.setOption(buildOption());
 
   // ── Right-click to reset view ──
   chartDom.addEventListener('contextmenu', function (e) {
@@ -236,11 +296,38 @@
     chart.dispatchAction({ type: 'restore' });
   });
 
-  // ── Debounced resize ──
+  // ── Double-tap to reset view (mobile) ──
+  var DOUBLE_TAP_THRESHOLD_MS = 350;
+  var lastTap = 0;
+  chartDom.addEventListener('touchend', function (e) {
+    var now = Date.now();
+    if (now - lastTap < DOUBLE_TAP_THRESHOLD_MS) {
+      e.preventDefault();
+      chart.dispatchAction({ type: 'restore' });
+    }
+    lastTap = now;
+  }, { passive: false });
+
+  // ── True viewport height for mobile browsers (hides/shows browser UI) ──
+  function setVh() {
+    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+  }
+  setVh();
+
+  // ── Debounced resize: update vh, re-apply options (breakpoint may change), resize chart ──
   var resizeTimer;
+  var lastMobile = isMobile();
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { chart.resize(); }, 150);
+    resizeTimer = setTimeout(function () {
+      setVh();
+      var nowMobile = isMobile();
+      if (nowMobile !== lastMobile) {
+        lastMobile = nowMobile;
+        chart.setOption(buildOption());
+      }
+      chart.resize();
+    }, 150);
   });
 })();
 </script>
