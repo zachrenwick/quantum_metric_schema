@@ -73,6 +73,32 @@
     color: #b00;
     font-size: 1rem;
   }
+  .search-bar {
+    padding: 6px 28px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #search {
+    font-family: inherit;
+    font-size: 0.82rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 4px 8px;
+    background: #fffff8;
+    color: #333;
+    width: 260px;
+    outline: none;
+  }
+  #search:focus {
+    border-color: #888;
+  }
+  #search-count {
+    font-size: 0.72rem;
+    color: #999;
+  }
   .stats {
     font-size: 0.72rem;
     color: #aaa;
@@ -95,6 +121,10 @@
   <kbd>Drag</kbd> to pan &nbsp;·&nbsp;
   <kbd>Right-click</kbd> to reset view
 </div>
+<div class="search-bar">
+  <input type="search" id="search" placeholder="Search fields…" autocomplete="off" spellcheck="false">
+  <span id="search-count"></span>
+</div>
 <div id="chart"></div>
 <div id="fallback">Schema data is missing or invalid. See source comments for regeneration steps.</div>
 <div class="stats" id="stats"></div>
@@ -106,6 +136,9 @@
 
   // ── Embedded schema payload (see header comment for refresh instructions) ──
   var SCHEMA_DATA = {"name":"sessions_archive","children":[{"name":"id (INTEGER)"},{"name":"cookie (STRING)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"last_updated (INTEGER)"},{"name":"screen_width (INTEGER)"},{"name":"screen_height (INTEGER)"},{"name":"conversion_count (INTEGER)"},{"name":"conversion_value (INTEGER)"},{"name":"cart_value (INTEGER)"},{"name":"abn_segment (STRING)"},{"name":"engaged (BOOLEAN)"},{"name":"conn_rtt (STRING)"},{"name":"conn_eff_type (STRING)"},{"name":"conn_down (STRING)"},{"name":"exit_click_sel (STRING)"},{"name":"exit_click_text (STRING)"},{"name":"exit_url (STRING)"},{"name":"qm_version (STRING)"},{"name":"application_type (STRING)"},{"name":"replay_enabled (BOOLEAN)"},{"name":"user (RECORD)","children":[{"name":"id (INTEGER)"},{"name":"email (STRING)"},{"name":"login (STRING)"},{"name":"cookies (REPEATED STRING)"},{"name":"firstname (STRING)"},{"name":"lastname (STRING)"},{"name":"loyalty (INTEGER)"},{"name":"data (STRING)"},{"name":"created (INTEGER)"},{"name":"updated (INTEGER)"}]},{"name":"locale (RECORD)","children":[{"name":"ip (STRING)"},{"name":"country_iso_code (STRING)"},{"name":"region (STRING)"},{"name":"city (STRING)"},{"name":"lat (FLOAT)"},{"name":"lng (FLOAT)"},{"name":"encrypted_ip (STRING)"},{"name":"encrypt_key (STRING)"},{"name":"hashed_ip (STRING)"}]},{"name":"device (RECORD)","children":[{"name":"name (STRING)"},{"name":"type (STRING)"},{"name":"user_agent (STRING)"},{"name":"browser_name (STRING)"},{"name":"browser_major_ver (INTEGER)"}]},{"name":"os (RECORD)","children":[{"name":"id (INTEGER)"},{"name":"name (STRING)"},{"name":"type (STRING)"}]},{"name":"landing_url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"last_url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"referrer (RECORD)","children":[{"name":"category (STRING)"},{"name":"sub_category (STRING)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"first_referrer (RECORD)","children":[{"name":"category (STRING)"},{"name":"sub_category (STRING)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"replay_viewed (BOOLEAN)"},{"name":"partition_date (DATE)"},{"name":"hits (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"secure (BOOLEAN)"},{"name":"response_size (INTEGER)"},{"name":"dom_interactive (INTEGER)"},{"name":"dom_complete (INTEGER)"},{"name":"engaged_seconds (INTEGER)"},{"name":"fetch_start (INTEGER)"},{"name":"domain_lookup_start (INTEGER)"},{"name":"domain_lookup_end (INTEGER)"},{"name":"connect_start (INTEGER)"},{"name":"secure_connection_start (INTEGER)"},{"name":"connect_end (INTEGER)"},{"name":"redirect_start (INTEGER)"},{"name":"redirect_end (INTEGER)"},{"name":"request_start (INTEGER)"},{"name":"response_start (INTEGER)"},{"name":"response_end (INTEGER)"},{"name":"dom_content_loaded_event_start (INTEGER)"},{"name":"dom_content_loaded_event_end (INTEGER)"},{"name":"load_event_start (INTEGER)"},{"name":"load_event_end (INTEGER)"},{"name":"first_paint (INTEGER)"},{"name":"first_contentful_paint (INTEGER)"},{"name":"elements_count (INTEGER)"},{"name":"spa_transition_duration (INTEGER)"},{"name":"spa_transition_apis (INTEGER)"},{"name":"spa_transition_mutations (INTEGER)"},{"name":"largest_contentful_paint (FLOAT)"},{"name":"first_input_delay (FLOAT)"},{"name":"cumulative_layout_shift (FLOAT)"},{"name":"timing_origin (INTEGER)"},{"name":"encoded_body_size (INTEGER)"},{"name":"decoded_body_size (INTEGER)"},{"name":"transfer_size (INTEGER)"},{"name":"clicks (INTEGER)"},{"name":"mouse_hundredth_miles (INTEGER)"},{"name":"scroll_hundredth_miles (INTEGER)"},{"name":"chars_typed (INTEGER)"},{"name":"exit_click_sel (STRING)"},{"name":"exit_click_text (STRING)"},{"name":"exit_url (STRING)"},{"name":"application_version (STRING)"},{"name":"query_string (STRING)"},{"name":"fragment_identifier (STRING)"},{"name":"max_scroll (INTEGER)"},{"name":"attn_10 (INTEGER)"},{"name":"attn_20 (INTEGER)"},{"name":"attn_30 (INTEGER)"},{"name":"attn_40 (INTEGER)"},{"name":"attn_50 (INTEGER)"},{"name":"attn_60 (INTEGER)"},{"name":"attn_70 (INTEGER)"},{"name":"attn_80 (INTEGER)"},{"name":"attn_90 (INTEGER)"},{"name":"attn_100 (INTEGER)"},{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]},{"name":"referrer (RECORD)","children":[{"name":"url (RECORD)","children":[{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"query_params (STRING)"}]}]},{"name":"window_start_height (INTEGER)"},{"name":"window_start_width (INTEGER)"},{"name":"title (STRING)"},{"name":"parent_id (INTEGER)"},{"name":"scroll_depth (INTEGER)"},{"name":"is_server_side (BOOLEAN)"},{"name":"html_hash (STRING)"},{"name":"inp_value (INTEGER)"},{"name":"inp_selector (STRING)"}]},{"name":"hits_event (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_domain (STRING)"},{"name":"hit_path (STRING)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"event_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"event (STRING)"},{"name":"value (STRING)"},{"name":"display_in_ui (BOOLEAN)"},{"name":"is_conversion (BOOLEAN)"},{"name":"is_error (BOOLEAN)"},{"name":"data (JSON)"},{"name":"is_server_side (BOOLEAN)"}]},{"name":"hits_ajax (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"domain (STRING)"},{"name":"path (STRING)"},{"name":"response_server_ms (INTEGER)"},{"name":"response_size (INTEGER)"},{"name":"response_code (INTEGER)"},{"name":"is_server_side (BOOLEAN)"},{"name":"query_string (STRING)"}]},{"name":"hits_forms (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_form_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"form_name_id (INTEGER)"},{"name":"form_name (STRING)"},{"name":"form_action_id (INTEGER)"},{"name":"form_action (STRING)"},{"name":"fill_time_s (INTEGER)"},{"name":"fields (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_form_id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"day (INTEGER)"},{"name":"hour (INTEGER)"},{"name":"field_name_id (INTEGER)"},{"name":"field_name (STRING)"},{"name":"fill_decaseconds (INTEGER)"},{"name":"filled_count (INTEGER)"},{"name":"is_filled (BOOLEAN)"},{"name":"is_drop_off (BOOLEAN)"},{"name":"value (STRING)"}]}]},{"name":"hits_click (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"selector (STRING)"},{"name":"parent_selector (STRING)"},{"name":"text (STRING)"},{"name":"time_to_click (INTEGER)"},{"name":"offsetx (INTEGER)"},{"name":"offsety (INTEGER)"}]},{"name":"hits_resources (REPEATED RECORD)","children":[{"name":"hit_ts (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"id (INTEGER)"},{"name":"ts (INTEGER)"},{"name":"url (STRING)"},{"name":"connect_start (INTEGER)"},{"name":"connect_end (INTEGER)"},{"name":"domain_lookup_start (INTEGER)"},{"name":"domain_lookup_end (INTEGER)"},{"name":"decoded_body_size (INTEGER)"},{"name":"encoded_body_size (INTEGER)"},{"name":"fetch_start (INTEGER)"},{"name":"initiator_type (STRING)"},{"name":"next_hop_protocol (STRING)"},{"name":"redirect_start (INTEGER)"},{"name":"redirect_end (INTEGER)"},{"name":"request_start (INTEGER)"},{"name":"response_start (INTEGER)"},{"name":"response_end (INTEGER)"},{"name":"secure_connection_start (INTEGER)"},{"name":"transfer_size (INTEGER)"},{"name":"worker_start (INTEGER)"},{"name":"is_cached (BOOLEAN)"},{"name":"is_critical (BOOLEAN)"},{"name":"is_cross_origin (BOOLEAN)"},{"name":"is_async (BOOLEAN)"},{"name":"is_compressed (BOOLEAN)"},{"name":"server_timings (STRING)"}]},{"name":"timestamp (TIMESTAMP)"},{"name":"etl_batch (TIMESTAMP)"},{"name":"session_events (REPEATED RECORD)","children":[{"name":"ts (INTEGER)"},{"name":"id (INTEGER)"},{"name":"name (STRING)"},{"name":"source (STRING)"},{"name":"data (JSON)"}]},{"name":"is_server_side (BOOLEAN)"},{"name":"event_ids (REPEATED INTEGER)"},{"name":"has_errors (BOOLEAN)"},{"name":"surveys (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"session_id (INTEGER)"},{"name":"hit_id (INTEGER)"},{"name":"hit_ts (INTEGER)"},{"name":"hit_path (STRING)"},{"name":"hit_domain (STRING)"},{"name":"survey_id (STRING)"},{"name":"version (INTEGER)"},{"name":"response_id (STRING)"},{"name":"status (STRING)"},{"name":"answers (REPEATED RECORD)","children":[{"name":"id (INTEGER)"},{"name":"question_id (STRING)"},{"name":"response_text (STRING)"},{"name":"response_rating (INTEGER)"},{"name":"response_choices (REPEATED STRING)"},{"name":"sentiment (FLOAT)"},{"name":"categories (REPEATED STRING)"},{"name":"updated_ts (INTEGER)"},{"name":"labels (REPEATED STRING)"},{"name":"topics (REPEATED RECORD)","children":[{"name":"name (STRING)"},{"name":"subtopics (REPEATED STRING)"}]},{"name":"themes (REPEATED STRING)"},{"name":"question (STRING)"}]},{"name":"ts (INTEGER)"},{"name":"shown_ts (INTEGER)"},{"name":"started_ts (INTEGER)"},{"name":"last_updated (INTEGER)"},{"name":"survey (STRING)"}]}]};
+
+  // Save a raw copy of the schema before any mutations so search can filter cleanly
+  var SCHEMA_DATA_RAW = structuredClone(SCHEMA_DATA);
 
   // ── Validate payload ──
   if (!SCHEMA_DATA || !SCHEMA_DATA.children) {
@@ -241,6 +274,71 @@
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () { chart.resize(); }, 150);
+  });
+
+  // ── Search / filter ──
+  // Returns a filtered copy of the tree keeping only paths that contain a match.
+  // Ancestor nodes are preserved so the tree remains navigable.
+  function filterTree(node, query) {
+    var isMatch = node.name.toLowerCase().indexOf(query) !== -1;
+    var filteredChildren = [];
+    if (node.children) {
+      node.children.forEach(function (ch) {
+        var result = filterTree(ch, query);
+        if (result) filteredChildren.push(result);
+      });
+    }
+    if (!isMatch && filteredChildren.length === 0) return null;
+    // Shallow-clone all non-children node properties, then attach filtered children
+    var clone = {};
+    Object.keys(node).forEach(function (k) { if (k !== 'children') clone[k] = node[k]; });
+    if (filteredChildren.length > 0) {
+      clone.children = filteredChildren;
+      clone.collapsed = false; // expand all matches
+    }
+    return clone;
+  }
+
+  // Count nodes whose name directly contains the query string.
+  function countMatches(node, query) {
+    var count = node.name.toLowerCase().indexOf(query) !== -1 ? 1 : 0;
+    if (node.children) {
+      node.children.forEach(function (ch) { count += countMatches(ch, query); });
+    }
+    return count;
+  }
+
+  var searchInput = document.getElementById('search');
+  var searchCount = document.getElementById('search-count');
+  var searchTimer;
+
+  searchInput.addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () {
+      var query = searchInput.value.trim().toLowerCase();
+
+      if (!query) {
+        // Restore SCHEMA_DATA which already has setCollapsed + styleTree applied,
+        // preserving the original collapsed initial state on clear.
+        chart.setOption({ series: [{ data: [SCHEMA_DATA] }] });
+        searchCount.textContent = '';
+        return;
+      }
+
+      var filtered = filterTree(SCHEMA_DATA_RAW, query);
+      if (!filtered) {
+        searchCount.textContent = 'No fields found';
+        chart.setOption({ series: [{ data: [{ name: SCHEMA_DATA_RAW.name, children: [] }] }] });
+        return;
+      }
+
+      // Apply visual styles to the freshly-filtered tree before rendering
+      styleTree(filtered);
+      chart.setOption({ series: [{ data: [filtered] }] });
+
+      var n = countMatches(SCHEMA_DATA_RAW, query);
+      searchCount.textContent = n + ' field' + (n !== 1 ? 's' : '') + ' matched';
+    }, 200);
   });
 })();
 </script>
